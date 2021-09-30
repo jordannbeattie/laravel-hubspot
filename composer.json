@@ -1,5 +1,5 @@
 {
-    "name": "jordanbeattie/hubspot",
+    "name": "jordanbeattie/laravel-hubspot",
     "require": {
         "livewire/livewire": "^2.0"
     },
