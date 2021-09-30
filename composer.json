@@ -1,0 +1,21 @@
+{
+    "name": "jordanbeattie/hubspot",
+    "require": {
+        "livewire/livewire": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Jordanbeattie\\Hubspot\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Jordanbeattie\\Hubspot\\HubspotServiceProvider"
+            ],
+            "aliases": {
+                "Hubspot": "Jordanbeattie\\Hubspot\\Facades\\Hubspot"
+            }
+        }
+    }
+}
