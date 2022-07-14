@@ -15,7 +15,7 @@ class Hubspot
         return Team::where('hs_access_token', $token)->first();
     }
 
-    public function get( $url, $parameters = [], $token )
+    public function get( $token, $url, $parameters = [] )
     {
         $original_url = $url;
         /* Prepare the URL */
@@ -55,7 +55,7 @@ class Hubspot
             return $response->successful() ? $response->body() : null;
     }
 
-    public function post( $url, $parameters = [], $token )
+    public function post( $token, $url, $parameters = [] )
     {
         $url = "https://api.hubapi.com" . trim($url);
         $team = static::team($token);
@@ -68,7 +68,7 @@ class Hubspot
         return $response->body();
     }
 
-    public function patch($url, $parameters = [], $token )
+    public function patch($token, $url, $parameters = [] )
     {
         $url = "https://api.hubapi.com" . trim($url);
         static::team($token)->refreshHubspotAccess();

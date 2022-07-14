@@ -32,7 +32,7 @@ class HubspotConnection extends Model
                 $data['limit'] = $limit;
                 $data['property'] = 'texten_sms_opt_out';
             }
-            $response = Hubspot::get($url, $data, $this->token);
+            $response = Hubspot::get($this->token, $url, $data);
             $response = json_decode($response);
             return $response->results;
         }
@@ -47,7 +47,7 @@ class HubspotConnection extends Model
                     'mobilephone'
                 ]
             ];
-            $response = Hubspot::get($url, $data, $this->token);
+            $response = Hubspot::get($this->token, $url, $data);
             return json_decode($response);
         }
 
@@ -67,7 +67,7 @@ class HubspotConnection extends Model
                     $data['vidOffset'] = $offset;
                 }
                 $this->team->refreshHubspotAccess();
-                $results = Hubspot::get($url, $data, $this->token);
+                $results = Hubspot::get($this->token, $url, $data);
                 $json_results = json_decode($results);
                 $array_results = json_decode($results, true);
                 if(property_exists($json_results, 'contacts'))
@@ -115,7 +115,7 @@ class HubspotConnection extends Model
                     "body" => $note
                 ]
             ];
-            return Hubspot::post("/engagements/v1/engagements", $engagement, $this->token);
+            return Hubspot::post($this->token, "/engagements/v1/engagements", $engagement);
         }
 
         public function searchForContactByPhoneNumber($number)
@@ -140,7 +140,7 @@ class HubspotConnection extends Model
                     'phone', 'mobilephone', 'firstname', 'lastname', 'email'
                 ]
             ];
-            $response = Hubspot::post("/crm/v3/objects/contacts/search", $data, $this->token);
+            $response = Hubspot::post($this->token, "/crm/v3/objects/contacts/search", $data);
             return json_decode($response);
         }
 
@@ -154,13 +154,13 @@ class HubspotConnection extends Model
                 $data['properties'][$property] = $value;
             }
             $contactUrl = "/crm/v3/objects/contacts/" . $contact->id;
-            return Hubspot::patch($contactUrl, $data, $this->token);
+            return Hubspot::patch($this->token, $contactUrl, $data);
         }
 
         public function search($searchTerm)
         {
             $url = "/contacts/v1/search/query";
-            $response = Hubspot::get($url, ['q' => $searchTerm], $this->token);
+            $response = Hubspot::get($this->token, $url, ['q' => $searchTerm]);
             if(is_null($response) && !property_exists($response, 'contacts'))
             {
                 return null;
@@ -179,7 +179,7 @@ class HubspotConnection extends Model
             $lists = [];
             while( $more )
             {
-                $results = Hubspot::get($url, ['offset' => $offset], $this->token);
+                $results = Hubspot::get($this->token, $url, ['offset' => $offset]);
                 if(array_key_exists('has-more', json_decode($results, true)))
                 {
                     $more = json_decode($results, true)['has-more'];
@@ -204,7 +204,7 @@ class HubspotConnection extends Model
         public function list( $list_id )
         {
             $url = "/contacts/v1/lists/" . $list_id;
-            return json_decode(Hubspot::get($url, [], $this->token));
+            return json_decode(Hubspot::get($this->token, $url, []));
         }
     /**** End Lists ****/
 
@@ -223,7 +223,7 @@ class HubspotConnection extends Model
                     'objectType'    => 'contact'
                 ];
                 $this->team->refreshHubspotAccess();
-                $fieldResponse = Hubspot::post($url, $fieldData, $this->token);
+                $fieldResponse = Hubspot::post($this->token, $url, $fieldData);
                 if( $fieldResponse->successful() )
                 {
                     $this->team->update(['hubspot_sms_field' => true]);
@@ -241,7 +241,7 @@ class HubspotConnection extends Model
         {
             $url = "/crm/v3/properties/contact";
             $data = [];
-            $response = json_decode(Hubspot::get($url, $data, $this->token));
+            $response = json_decode(Hubspot::get($this->token, $url, $data));
             if( property_exists($response, 'results') )
             {
                 foreach( $response->results as $field )
@@ -259,7 +259,7 @@ class HubspotConnection extends Model
     /**** Allow custom request ****/
         public function sendRequest( $url, $parameters = [] )
         {
-            return Hubspot::get($url, $parameters = [], $this->token);
+            return Hubspot::get($this->token, $url, $parameters = []);
         }
     /**** End allow custom request ****/
 
