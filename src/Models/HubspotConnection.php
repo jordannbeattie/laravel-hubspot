@@ -255,6 +255,13 @@ class HubspotConnection extends Model
             }
         }
     /**** End Field Configuration ****/
+    
+    /**** Allow custom request ****/
+        public function sendRequest( $url, $parameters = [] )
+        {
+            return Hubspot::get($url, $parameters = [], $this->token);
+        }
+    /**** End allow custom request ****/
 
 
 }
