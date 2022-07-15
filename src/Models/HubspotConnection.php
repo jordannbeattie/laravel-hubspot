@@ -255,11 +255,29 @@ class HubspotConnection extends Model
             }
         }
     /**** End Field Configuration ****/
+
+    /**** Account Info ****/
+        public function portalId()
+        {
+            $response = Hubspot::get($this->token, "/integrations/v1/me");
+            return json_decode($response)->portalId ?? '';
+        }
+    /**** End Account Info ****/
     
     /**** Allow custom request ****/
-        public function sendRequest( $url, $parameters = [] )
+        public function sendRequest( $url, $parameters = [], $type = "get" )
         {
-            return Hubspot::get($this->token, $url, $parameters = []);
+            
+            if( \Str::lower($type) == "get" )
+            {
+                return Hubspot::get($this->token, $url, $parameters = []);
+            }
+            
+            if( \Str::lower($type) == "post" )
+            {
+                return Hubspot::post($this->token, $url, $parameters = []);
+            }
+
         }
     /**** End allow custom request ****/
 
