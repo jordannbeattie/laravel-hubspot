@@ -21,7 +21,10 @@ trait HasHubspot {
         $this->hs_access_token = null;
         $this->hs_refresh_token = null;
         $this->hs_access_expires = null;
-        $this->hubspot_sms_field = 0;
+        if( $this->hubspot_sms_field )
+        {
+            $this->hubspot_sms_field = 0;
+        }
         $this->save();
     }
 
