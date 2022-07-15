@@ -17,7 +17,8 @@ class LoginController extends Controller
         $callback_url = route('hubspot.auth.callback');
         $scope = [
             'contacts',
-            'timeline'
+            'timeline',
+            'forms'
         ];
         $scope_string = "";
         for( $i=0; $i<count($scope); $i++ )
