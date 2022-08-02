@@ -15,20 +15,7 @@ class LoginController extends Controller
     {
         $client_id = getenv('HUBSPOT_CLIENT_ID');
         $callback_url = route('hubspot.auth.callback');
-        $scope = [
-            'contacts',
-            'timeline',
-            'forms'
-        ];
-        $scope_string = "";
-        for( $i=0; $i<count($scope); $i++ )
-        {
-            $scope_string .= $scope[$i];
-            if( $i != count($scope) - 1 )
-            {
-                $scope_string .= "%20";
-            }
-        }
+        $scope_string = static::processScopes();
         $url =  "https://app.hubspot.com/oauth/authorize?client_id=" . $client_id .
                 "&redirect_uri=" . $callback_url .
                 "&scope=" . $scope_string;
@@ -68,6 +55,33 @@ class LoginController extends Controller
         {
             abort(500, $auth_req->status());
         }
+    }
+    
+    private static function processScopes()
+    {
+
+        // Set required scopes
+        $scopes = ['oauth'];
+
+        // Check for user-defined scopes
+        $envscopes = getenv('HUBSPOT_SCOPES');
+
+        // Merge user-defined and required scopes
+        if( $envscopes != false )
+        {
+            $envscopes = explode(",", $envscopes);  
+            foreach( $envscopes as $scope )
+            {
+                if(!in_array( $scope, $scopes ) && !empty($scope))
+                {
+                    array_push( $scopes, $scope );
+                }
+            } 
+        }
+
+        // Create a useable string
+        return implode("%20", $scopes);
+        
     }
 
 }
